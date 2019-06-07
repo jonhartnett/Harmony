@@ -13,7 +13,7 @@ namespace HarmonyLib
 		/// <param name="owner">The owner (Harmony ID)</param>
 		/// <param name="info">The annotation info</param>
 		///
-		internal static void AddPrefix(PatchInfo patchInfo, string owner, HarmonyMethod info)
+		internal static void AddPrefix(IPatchInfo patchInfo, string owner, HarmonyMethod info)
 		{
 			if (info == null || info.method == null) return;
 
@@ -28,7 +28,7 @@ namespace HarmonyLib
 		/// <param name="patchInfo">The patch info</param>
 		/// <param name="owner">The owner (Harmony ID)</param>
 		///
-		internal static void RemovePrefix(PatchInfo patchInfo, string owner)
+		internal static void RemovePrefix(IPatchInfo patchInfo, string owner)
 		{
 			patchInfo.RemovePrefix(owner);
 		}
@@ -38,7 +38,7 @@ namespace HarmonyLib
 		/// <param name="owner">The owner (Harmony ID)</param>
 		/// <param name="info">The annotation info</param>
 		///
-		internal static void AddPostfix(PatchInfo patchInfo, string owner, HarmonyMethod info)
+		internal static void AddPostfix(IPatchInfo patchInfo, string owner, HarmonyMethod info)
 		{
 			if (info == null || info.method == null) return;
 
@@ -53,7 +53,7 @@ namespace HarmonyLib
 		/// <param name="patchInfo">The patch info</param>
 		/// <param name="owner">The owner (Harmony ID)</param>
 		///
-		internal static void RemovePostfix(PatchInfo patchInfo, string owner)
+		internal static void RemovePostfix(IPatchInfo patchInfo, string owner)
 		{
 			patchInfo.RemovePostfix(owner);
 		}
@@ -63,7 +63,7 @@ namespace HarmonyLib
 		/// <param name="owner">The owner (Harmony ID)</param>
 		/// <param name="info">The annotation info</param>
 		///
-		internal static void AddTranspiler(PatchInfo patchInfo, string owner, HarmonyMethod info)
+		internal static void AddTranspiler(IPatchInfo patchInfo, string owner, HarmonyMethod info)
 		{
 			if (info == null || info.method == null) return;
 
@@ -78,7 +78,7 @@ namespace HarmonyLib
 		/// <param name="patchInfo">The patch info</param>
 		/// <param name="owner">The owner (Harmony ID)</param>
 		///
-		internal static void RemoveTranspiler(PatchInfo patchInfo, string owner)
+		internal static void RemoveTranspiler(IPatchInfo patchInfo, string owner)
 		{
 			patchInfo.RemoveTranspiler(owner);
 		}
@@ -88,7 +88,7 @@ namespace HarmonyLib
 		/// <param name="owner">The owner (Harmony ID)</param>
 		/// <param name="info">The annotation info</param>
 		///
-		internal static void AddFinalizer(PatchInfo patchInfo, string owner, HarmonyMethod info)
+		internal static void AddFinalizer(IPatchInfo patchInfo, string owner, HarmonyMethod info)
 		{
 			if (info == null || info.method == null) return;
 
@@ -103,7 +103,7 @@ namespace HarmonyLib
 		/// <param name="patchInfo">The patch info</param>
 		/// <param name="owner">The owner (Harmony ID)</param>
 		///
-		internal static void RemoveFinalizer(PatchInfo patchInfo, string owner)
+		internal static void RemoveFinalizer(IPatchInfo patchInfo, string owner)
 		{
 			patchInfo.RemoveFinalizer(owner);
 		}
@@ -112,7 +112,7 @@ namespace HarmonyLib
 		/// <param name="patchInfo">The patch info</param>
 		/// <param name="patch">The patch method</param>
 		///
-		internal static void RemovePatch(PatchInfo patchInfo, MethodInfo patch)
+		internal static void RemovePatch(IPatchInfo patchInfo, MethodInfo patch)
 		{
 			patchInfo.RemovePatch(patch);
 		}
@@ -132,7 +132,7 @@ namespace HarmonyLib
 		/// <param name="patches">Patches to sort</param>
 		/// <returns>The sorted patch methods</returns>
 		///
-		internal static List<MethodInfo> GetSortedPatchMethods(MethodBase original, Patch[] patches)
+		internal static List<MethodInfo> GetSortedPatchMethods(MethodBase original, IEnumerable<IPatch> patches)
 		{
 			return new PatchSorter(patches).Sort(original);
 		}
@@ -143,7 +143,7 @@ namespace HarmonyLib
 		/// <param name="instanceID">Harmony ID</param>
 		/// <returns>The newly created dynamic method</returns>
 		///
-		internal static DynamicMethod UpdateWrapper(MethodBase original, PatchInfo patchInfo, string instanceID)
+		internal static DynamicMethod UpdateWrapper(MethodBase original, IPatchInfo patchInfo, string instanceID)
 		{
 			var sortedPrefixes = GetSortedPatchMethods(original, patchInfo.prefixes);
 			var sortedPostfixes = GetSortedPatchMethods(original, patchInfo.postfixes);

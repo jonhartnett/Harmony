@@ -11,11 +11,11 @@ namespace HarmonyLib
 		HashSet<PatchSortingWrapper> _handledPatches;
 		List<PatchSortingWrapper> _result;
 		List<PatchSortingWrapper> _waitingList;
-		internal Patch[] sortedPatchArray;
+		internal IPatch[] sortedPatchArray;
 
 		/// <summary>Creates a patch sorter</summary>
-		/// <param name="patches">Array of patches that will be sorted</param>
-		internal PatchSorter(Patch[] patches)
+		/// <param name="patches">Enumerable of patches that will be sorted</param>
+		internal PatchSorter(IEnumerable<IPatch> patches)
 		{
 			// Build the list of all patches first to be able to create dependency relationships.
 			_patches = patches.Select(x => new PatchSortingWrapper(x)).ToList();
@@ -82,13 +82,13 @@ namespace HarmonyLib
 
 		/// <summary>Checks if the sorter was created with the same patch list and as a result can be reused to
 		/// get the sorted order of the patches.</summary>
-		/// <param name="patches">List of patches to check against</param>
+		/// <param name="patches">Enumerable of patches to check against</param>
 		/// <returns>true if equal</returns>
-		internal bool ComparePatchLists(Patch[] patches)
+		internal bool ComparePatchLists(IEnumerable<IPatch> patches)
 		{
 			if (sortedPatchArray == null) Sort(null);
-			return patches != null && sortedPatchArray.Length == patches.Length &&
-					 sortedPatchArray.All(x => patches.Contains(x, new PatchDetailedComparer()));
+			ISet<IPatch> patchSet = new HashSet<IPatch>(patches ?? Enumerable.Empty<IPatch>(), new PatchDetailedComparer());
+			return sortedPatchArray.Length == patchSet.Count && sortedPatchArray.All(x => patchSet.Contains(x));
 		}
 
 		/// <summary>Removes one unresolved dependency from the least important patch.</summary>
@@ -151,11 +151,11 @@ namespace HarmonyLib
 		{
 			internal readonly HashSet<PatchSortingWrapper> after;
 			internal readonly HashSet<PatchSortingWrapper> before;
-			internal readonly Patch innerPatch;
+			internal readonly IPatch innerPatch;
 
 			/// <summary>Create patch wrapper object used for sorting</summary>
 			/// <param name="patch">Patch to wrap</param>
-			internal PatchSortingWrapper(Patch patch)
+			internal PatchSortingWrapper(IPatch patch)
 			{
 				innerPatch = patch;
 				before = new HashSet<PatchSortingWrapper>();
@@ -167,8 +167,8 @@ namespace HarmonyLib
 			/// <returns>integer to define sort order (-1, 0, 1)</returns>
 			public int CompareTo(object obj)
 			{
-				var p = obj as PatchSortingWrapper;
-				return PatchInfoSerialization.PriorityComparer(p?.innerPatch, innerPatch.index, innerPatch.priority);
+				var wrapper = obj as PatchSortingWrapper;
+				return innerPatch.CompareTo(wrapper?.innerPatch);
 			}
 
 			/// <summary>Determines whether patches are equal</summary>
@@ -176,14 +176,15 @@ namespace HarmonyLib
 			/// <returns>true if equal</returns>
 			public override bool Equals(object obj)
 			{
-				return obj is PatchSortingWrapper wrapper && innerPatch.patch == wrapper.innerPatch.patch;
+				var wrapper = obj as PatchSortingWrapper;
+				return innerPatch.Equals(wrapper?.innerPatch);
 			}
 
 			/// <summary>Hash function</summary>
 			/// <returns>A hash code</returns>
 			public override int GetHashCode()
 			{
-				return innerPatch.patch.GetHashCode();
+				return innerPatch.GetHashCode();
 			}
 
 			/// <summary>Bidirectionally registers Patches as after dependencies</summary>
@@ -225,9 +226,9 @@ namespace HarmonyLib
 			}
 		}
 
-		internal class PatchDetailedComparer : IEqualityComparer<Patch>
+		internal class PatchDetailedComparer : IEqualityComparer<IPatch>
 		{
-			public bool Equals(Patch x, Patch y)
+			public bool Equals(IPatch x, IPatch y)
 			{
 				return y != null && x != null && x.owner == y.owner && x.patch == y.patch && x.index == y.index &&
 						 x.priority == y.priority
@@ -237,7 +238,7 @@ namespace HarmonyLib
 #pragma warning restore RECS0030
 			}
 
-			public int GetHashCode(Patch obj)
+			public int GetHashCode(IPatch obj)
 			{
 				return obj.GetHashCode();
 			}

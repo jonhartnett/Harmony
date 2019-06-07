@@ -55,7 +55,7 @@ namespace HarmonyLib
 		}
 
 		/// <summary>Searches current assembly for Harmony annotations and uses them to create patches</summary>
-		/// 
+		///
 		public void PatchAll()
 		{
 			var method = new StackTrace().GetFrame(1).GetMethod();
@@ -65,7 +65,7 @@ namespace HarmonyLib
 
 		/// <summary>Create a patch processor from an annotated class</summary>
 		/// <param name="type">The class</param>
-		/// 
+		///
 		public PatchProcessor ProcessorForAnnotatedClass(Type type)
 		{
 			var parentMethodInfos = HarmonyMethodExtensions.GetFromType(type);
@@ -79,7 +79,7 @@ namespace HarmonyLib
 
 		/// <summary>Searches an assembly for Harmony annotations and uses them to create patches</summary>
 		/// <param name="assembly">The assembly</param>
-		/// 
+		///
 		public void PatchAll(Assembly assembly)
 		{
 			assembly.GetTypes().Do(type => ProcessorForAnnotatedClass(type)?.Patch());
@@ -108,7 +108,7 @@ namespace HarmonyLib
 		///
 		public void UnpatchAll(string harmonyID = null)
 		{
-			bool IDCheck(Patch patchInfo) => harmonyID == null || patchInfo.owner == harmonyID;
+			bool IDCheck(IPatch patchInfo) => harmonyID == null || patchInfo.owner == harmonyID;
 
 			var originals = GetPatchedMethods().ToList();
 			foreach (var original in originals)

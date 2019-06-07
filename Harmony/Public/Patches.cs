@@ -8,13 +8,13 @@ namespace HarmonyLib
 	public class Patches
 	{
 		/// <summary>The prefixes</summary>
-		public readonly ReadOnlyCollection<Patch> Prefixes;
+		public readonly ReadOnlyCollection<IPatch> Prefixes;
 		/// <summary>The postfixes</summary>
-		public readonly ReadOnlyCollection<Patch> Postfixes;
+		public readonly ReadOnlyCollection<IPatch> Postfixes;
 		/// <summary>The transpilers</summary>
-		public readonly ReadOnlyCollection<Patch> Transpilers;
+		public readonly ReadOnlyCollection<IPatch> Transpilers;
 		/// <summary>The finalizers</summary>
-		public readonly ReadOnlyCollection<Patch> Finalizers;
+		public readonly ReadOnlyCollection<IPatch> Finalizers;
 
 		/// <summary>Gets all owners (Harmony IDs) or all known patches</summary>
 		/// <value>The patch owners</value>
@@ -38,13 +38,8 @@ namespace HarmonyLib
 		/// <param name="transpilers">The transpilers</param>
 		/// <param name="finalizers">The transpilers</param>
 		///
-		public Patches(Patch[] prefixes, Patch[] postfixes, Patch[] transpilers, Patch[] finalizers)
+		public Patches(IEnumerable<IPatch> prefixes, IEnumerable<IPatch> postfixes, IEnumerable<IPatch> transpilers, IEnumerable<IPatch> finalizers)
 		{
-			if (prefixes == null) prefixes = new Patch[0];
-			if (postfixes == null) postfixes = new Patch[0];
-			if (transpilers == null) transpilers = new Patch[0];
-			if (finalizers == null) finalizers = new Patch[0];
-
 			Prefixes = prefixes.ToList().AsReadOnly();
 			Postfixes = postfixes.ToList().AsReadOnly();
 			Transpilers = transpilers.ToList().AsReadOnly();
