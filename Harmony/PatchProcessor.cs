@@ -71,15 +71,12 @@ namespace Harmony
 					var individualPrepareResult = RunMethod<HarmonyPrepare, bool>(true, original);
 					if (individualPrepareResult)
 					{
-						var patchInfo = HarmonySharedState.GetPatchInfo(original);
-						if (patchInfo == null) patchInfo = new PatchInfo();
+						var patchInfo = HarmonySharedState.GetOrCreatePatchInfo(original);
 
 						PatchFunctions.AddPrefix(patchInfo, instance.Id, prefix);
 						PatchFunctions.AddPostfix(patchInfo, instance.Id, postfix);
 						PatchFunctions.AddTranspiler(patchInfo, instance.Id, transpiler);
 						dynamicMethods.Add(PatchFunctions.UpdateWrapper(original, patchInfo, instance.Id));
-
-						HarmonySharedState.UpdatePatchInfo(original, patchInfo);
 
 						RunMethod<HarmonyCleanup>(original);
 					}
@@ -94,8 +91,7 @@ namespace Harmony
 			{
 				foreach (var original in originals)
 				{
-					var patchInfo = HarmonySharedState.GetPatchInfo(original);
-					if (patchInfo == null) patchInfo = new PatchInfo();
+					var patchInfo = HarmonySharedState.GetOrCreatePatchInfo(original);
 
 					if (type == HarmonyPatchType.All || type == HarmonyPatchType.Prefix)
 						PatchFunctions.RemovePrefix(patchInfo, harmonyID);
@@ -104,8 +100,6 @@ namespace Harmony
 					if (type == HarmonyPatchType.All || type == HarmonyPatchType.Transpiler)
 						PatchFunctions.RemoveTranspiler(patchInfo, harmonyID);
 					PatchFunctions.UpdateWrapper(original, patchInfo, instance.Id);
-
-					HarmonySharedState.UpdatePatchInfo(original, patchInfo);
 				}
 			}
 		}
@@ -116,13 +110,10 @@ namespace Harmony
 			{
 				foreach (var original in originals)
 				{
-					var patchInfo = HarmonySharedState.GetPatchInfo(original);
-					if (patchInfo == null) patchInfo = new PatchInfo();
+					var patchInfo = HarmonySharedState.GetOrCreatePatchInfo(original);
 
 					PatchFunctions.RemovePatch(patchInfo, patch);
 					PatchFunctions.UpdateWrapper(original, patchInfo, instance.Id);
-
-					HarmonySharedState.UpdatePatchInfo(original, patchInfo);
 				}
 			}
 		}

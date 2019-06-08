@@ -1,5 +1,6 @@
 using Harmony.Tools;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -27,12 +28,8 @@ namespace Harmony
 			}
 		}
 
-		public Patches(Patch[] prefixes, Patch[] postfixes, Patch[] transpilers)
+		public Patches(IEnumerable<Patch> prefixes, IEnumerable<Patch> postfixes, IEnumerable<Patch> transpilers)
 		{
-			if (prefixes == null) prefixes = new Patch[0];
-			if (postfixes == null) postfixes = new Patch[0];
-			if (transpilers == null) transpilers = new Patch[0];
-
 			Prefixes = prefixes.ToList().AsReadOnly();
 			Postfixes = postfixes.ToList().AsReadOnly();
 			Transpilers = transpilers.ToList().AsReadOnly();

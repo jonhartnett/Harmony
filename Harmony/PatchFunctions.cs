@@ -69,7 +69,7 @@ namespace Harmony
 			return MethodBodyReader.GetInstructions(generator, method);
 		}
 
-		public static List<MethodInfo> GetSortedPatchMethods(MethodBase original, Patch[] patches)
+		public static List<MethodInfo> GetSortedPatchMethods(MethodBase original, IEnumerable<Patch> patches)
 		{
 			return patches
 				.Where(p => p.patch != null)
