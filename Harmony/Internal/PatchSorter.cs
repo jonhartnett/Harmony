@@ -87,7 +87,7 @@ namespace HarmonyLib
 		internal bool ComparePatchLists(IEnumerable<IPatch> patches)
 		{
 			if (sortedPatchArray == null) Sort(null);
-			ISet<IPatch> patchSet = new HashSet<IPatch>(patches ?? Enumerable.Empty<IPatch>(), new PatchDetailedComparer());
+			HashSet<IPatch> patchSet = new HashSet<IPatch>(patches ?? Enumerable.Empty<IPatch>(), new PatchDetailedComparer());
 			return sortedPatchArray.Length == patchSet.Count && sortedPatchArray.All(x => patchSet.Contains(x));
 		}
 

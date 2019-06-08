@@ -78,10 +78,10 @@ namespace HarmonyLib
 			/// <summary>The finalizers</summary>
 			public List<SharedPatch> finalizers;
 
-			IEnumerable<IPatch> IPatchInfo.prefixes => prefixes;
-			IEnumerable<IPatch> IPatchInfo.postfixes => postfixes;
-			IEnumerable<IPatch> IPatchInfo.transpilers => transpilers;
-			IEnumerable<IPatch> IPatchInfo.finalizers => finalizers;
+			IEnumerable<IPatch> IPatchInfo.prefixes => prefixes.Cast<IPatch>();
+			IEnumerable<IPatch> IPatchInfo.postfixes => postfixes.Cast<IPatch>();
+			IEnumerable<IPatch> IPatchInfo.transpilers => transpilers.Cast<IPatch>();
+			IEnumerable<IPatch> IPatchInfo.finalizers => finalizers.Cast<IPatch>();
 
 			/// <summary>Default constructor</summary>
 			public SharedPatchInfo()
