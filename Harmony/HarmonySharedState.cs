@@ -73,10 +73,10 @@ namespace Harmony
 			/// <summary>The finalizers</summary>
 			public List<SharedPatch> finalizers;
 
-			IEnumerable<Patch> PatchInfo.prefixes => prefixes;
-			IEnumerable<Patch> PatchInfo.postfixes => postfixes;
-			IEnumerable<Patch> PatchInfo.transpilers => transpilers;
-			IEnumerable<Patch> PatchInfo.finalizers => finalizers;
+			IEnumerable<Patch> PatchInfo.prefixes => prefixes.Cast<Patch>();
+			IEnumerable<Patch> PatchInfo.postfixes => postfixes.Cast<Patch>();
+			IEnumerable<Patch> PatchInfo.transpilers => transpilers.Cast<Patch>();
+			IEnumerable<Patch> PatchInfo.finalizers => finalizers.Cast<Patch>();
 
 			/// <summary>Default constructor</summary>
 			public SharedPatchInfo()
